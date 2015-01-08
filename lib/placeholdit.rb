@@ -8,11 +8,11 @@ module Placeholdit
       src = "http://placehold.it/#{size}"
 
       config = {
-        :alt => (opts[:text] || "A placeholder image"),
+        :alt => CGI::escape(opts[:text] || "A placeholder image"),
         :class => "placeholder",
         :height => (size.split('x')[1] || size.split('x')[0]),
         :width => size.split('x')[0],
-        :title => opts[:title]
+        :title => (CGI::escape(opts[:title]) if opts[:title])
       }.merge!(opts)
 
       # Placehold.it preferences
@@ -23,7 +23,7 @@ module Placeholdit
         src += "/#{remove_hex_pound(config[:text_color])}"
       end
       if config[:text]
-        src += "&text=#{config[:text]}"
+        src += "&amp;text=#{CGI::escape(config[:text])}"
       end
 
       image_tag = "<img src='#{src}' alt='#{config[:alt]}' class='#{config[:class]}' height='#{config[:height]}' width='#{config[:width]}'"
